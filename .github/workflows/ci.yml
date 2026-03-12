@@ -10,6 +10,10 @@ on:
       - master
       - feat-ci-cd
 
+permissions:
+  pull-requests: write
+  checks: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -26,6 +30,25 @@ jobs:
       - name: Build Docker
         run: docker build --no-cache -t ci-cd-demo .
 
-      - name: Run tests
-        run: docker run --rm ci-cd-demo pytest
+      - name: Run tests with report
+        run: |
+          docker run --rm ci-cd-demo \
+          pytest --alluredir=./allure-results tests/
 
+      - name: Generate Allure test report
+        uses: andgineer/allure-report@v3.6
+        id: allure-report
+        if: always()
+        with:
+          allure-results: allure-results
+          website: gh-pages-dir
+          reports-site-path: builds/tests
+
+      - name: Publish Allure test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ always() && (steps.allure-report.outcome == 'success') }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ${{ steps.allure-report.outputs.reports-site }}
+          destination_dir: ${{ steps.allure-report.outputs.reports-site-path }}
