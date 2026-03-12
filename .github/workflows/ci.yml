@@ -33,7 +33,8 @@ jobs:
       - name: Run tests with report
         run: |
           docker run --rm ci-cd-demo \
-          pytest --alluredir=./allure-results tests/
+          pytest --alluredir=./allure-results tests/ \
+          allure generate allure-results
 
       - name: Generate Allure test report
         uses: andgineer/allure-report@v3.6
