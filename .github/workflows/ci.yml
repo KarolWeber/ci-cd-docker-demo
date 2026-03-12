@@ -27,5 +27,5 @@ jobs:
         run: docker build --no-cache -t ci-cd-demo .
 
       - name: Run tests
-        run: ocker run --rm ci-cd-demo pytest
+        run: docker run --rm ci-cd-demo pytest
 
