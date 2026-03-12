@@ -2,9 +2,13 @@ name: CI with Docker, Pytest
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - feat-ci-cd
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
+      - feat-ci-cd
 
 jobs:
   build-and-test:
