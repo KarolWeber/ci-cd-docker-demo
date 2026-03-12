@@ -17,5 +17,9 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker and run tests
+      - name: Build Docker
         run: docker build --no-cache -t ci-cd-demo .
+
+      - name: Run tests
+        run: docker pytest
+
